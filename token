@@ -1,0 +1,3 @@
+#!/bin/bash
+
+twitch token -s "chat:read chat:edit bits:read moderator:read:followers channel:read:redemptions channel:read:subscriptions"

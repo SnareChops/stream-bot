@@ -1,0 +1,103 @@
+custom-alerts {
+    display: flex;
+    flex-direction: column;
+}
+
+twitch-follow {
+    flex: 1;
+    display: block;
+    margin-bottom: 5px;
+}
+
+fake-terminal {
+    font-family: monospace;
+    display: block;
+}
+
+fake-terminal fake-terminal-header {
+    display: block;
+    width: 550px;
+    box-sizing: border-box;
+    height: 25px;
+    background-color: #af62c9;
+    margin: 0 auto;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+fake-terminal fake-terminal-header fake-buttons>* {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    border: 1px solid #000;
+    position: relative;
+    top: 6px;
+    left: 6px;
+    background-color: #ff3b47;
+    border-color: #9d252b;
+    display: inline-block;
+}
+
+fake-terminal fake-terminal-header fake-buttons fake-close {}
+
+fake-terminal fake-terminal-header fake-buttons fake-minimize {
+    position: relative;
+    left: 11px;
+    background-color: #ffc100;
+    border-color: #9d802c;
+}
+
+fake-terminal fake-terminal-header fake-buttons fake-zoom {
+    left: 16px;
+    background-color: #00d742;
+    border-color: #049931;
+}
+
+fake-terminal fake-terminal-body {
+    display: block;
+    background-color: #151515;
+    box-sizing: border-box;
+    width: 550px;
+    margin: 0 auto;
+    padding: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+fake-terminal fake-terminal-body p {
+    margin: 0;
+    color: white;
+}
+
+fake-terminal fake-terminal-body p fake-terminal-leader {
+    margin-right: 5px;
+}
+
+fake-terminal fake-terminal-body p fake-terminal-leader span {
+    color: #14900d;
+}
+
+fake-terminal fake-terminal-body p>span {
+    color: white;
+}
+
+fake-terminal fake-terminal-body p fake-cursor {
+    display: inline-block;
+    box-sizing: border-box;
+    border-bottom: 2px solid white;
+    width: 8px;
+    height: 5px;
+    animation: blink-caret .5s step-end infinite;
+}
+
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: rgb(255, 255, 255)
+    }
+}
