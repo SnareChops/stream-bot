@@ -2,7 +2,7 @@ FROM bitnami/golang:1.20 as builder
 WORKDIR /home/build
 COPY . .
 RUN curl -fsSL https://esbuild.github.io/dl/latest | sh \ 
-    && mv ./package/bin/esbuild /bin/esbuild \
+    && mv ./esbuild /bin/esbuild \
     && chmod +x /bin/esbuild \
     && go get . \
     && GOOS=linux GOARCH=amd64 go build -o stream-bot . \
