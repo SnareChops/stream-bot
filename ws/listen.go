@@ -17,9 +17,16 @@ type EventPayload struct {
 	Event map[string]interface{} `json:"event"`
 }
 
-func listen(ws *websocket.Conn, send chan []byte, reconnect chan string, subscriptions []*events.EventSub) {
+func listen(ws *websocket.Conn, send chan []byte, reconnect chan string, close chan bool, subscriptions []*events.EventSub) {
+	println("Starting WebSocket listener...")
 	for {
-		println("Waiting for next message")
+		// Check if the connection has been closed, if so stop listening
+		select {
+		case <-close:
+			println("Lister closed")
+			return
+		default:
+		}
 		// Read message from socket
 		_, data, err := ws.Read(context.Background())
 		if err != nil {
@@ -45,7 +52,6 @@ func listen(ws *websocket.Conn, send chan []byte, reconnect chan string, subscri
 		}
 		// Handle notification message
 		if message.Metadata.MessageType == MessageTypeNotification {
-			fmt.Printf("%v\n", subscriptions)
 			for _, subscription := range subscriptions {
 				if subscription.Type == message.Metadata.SubscriptionType {
 					payload := &EventPayload{}

@@ -3,12 +3,14 @@ package ws
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"nhooyr.io/websocket"
 )
 
 func connect(url string) (*websocket.Conn, string, error) {
+	fmt.Printf("Connecting WebSocket to %s\n", url)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	ws, _, err := websocket.Dial(ctx, url, nil)
@@ -31,6 +33,6 @@ func connect(url string) (*websocket.Conn, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
-
+	fmt.Printf("Connected with session ID: %s\n", payload.Session.ID)
 	return ws, payload.Session.ID, nil
 }

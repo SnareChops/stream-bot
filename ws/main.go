@@ -34,7 +34,8 @@ func Start(send chan []byte, clientId, userId, token, wsUrl, subscribeUrl string
 
 	// Listen for messages
 	reconnect := make(chan string)
-	go listen(ws, send, reconnect, subscriptions)
+	close := make(chan bool)
+	go listen(ws, send, reconnect, close, subscriptions)
 	for {
 		wsUrl = <-reconnect
 		// Make ws connection
@@ -43,9 +44,13 @@ func Start(send chan []byte, clientId, userId, token, wsUrl, subscribeUrl string
 		if err != nil {
 			return err
 		}
+		// Cycle close channel
+		prevClose := close
+		close = make(chan bool)
 		// Start new listener
-		go listen(ws, send, reconnect, subscriptions)
+		go listen(ws, send, reconnect, close, subscriptions)
 		// Send close signal to previous listener
+		prevClose <- true
 		prev.Close(websocket.StatusGoingAway, "goodbye")
 	}
 }
@@ -67,6 +72,7 @@ func createSubscriptions(clientId, sessionId, userId, token, subscribeUrl string
 			fmt.Printf("Failed to create subscription: %s\n", err)
 			failed = append(failed, sub)
 		}
+		fmt.Printf("Subscribed to %s\n", sub.Type)
 	}
 	return failed
 }

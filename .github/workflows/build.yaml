@@ -1,0 +1,14 @@
+name: Bot Build
+
+on: [push]
+env:
+  GITHUB_ACTOR: ${{ github.actor }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  build:
+    runs-on: [self-hosted, linux, x64]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build and upload
+        run: sh build.sh

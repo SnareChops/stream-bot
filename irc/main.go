@@ -4,7 +4,7 @@ import (
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
-func irc(channel, token string) error {
+func Start(channel, token string) error {
 	println("Connecting to IRC")
 	client := twitch.NewClient(channel, "oauth:"+token)
 

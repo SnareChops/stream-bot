@@ -53,7 +53,7 @@ func main() {
 		panic("TWITCH_API_URL")
 	}
 
-	send := make(chan []byte, 1)
+	send := make(chan []byte, 20)
 	close := make(chan bool)
 
 	// TODO: Send close signal when application is killed

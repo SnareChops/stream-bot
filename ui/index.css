@@ -1,22 +1,29 @@
-custom-alerts {
-    display: flex;
-    flex-direction: column;
+body {
+    margin: 0;
 }
 
-twitch-follow {
-    flex: 1;
-    display: block;
-    margin-bottom: 5px;
+custom-alerts {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    width: 1900px;
+    height: 1060px;
+    margin: 10px;
+}
+
+custom-alerts>* {
+    width: 30%;
 }
 
 fake-terminal {
     font-family: monospace;
     display: block;
+    margin: 5px;
 }
 
 fake-terminal fake-terminal-header {
     display: block;
-    width: 550px;
     box-sizing: border-box;
     height: 25px;
     background-color: #af62c9;
@@ -57,7 +64,6 @@ fake-terminal fake-terminal-body {
     display: block;
     background-color: #151515;
     box-sizing: border-box;
-    width: 550px;
     margin: 0 auto;
     padding: 20px;
     border-bottom-left-radius: 5px;
