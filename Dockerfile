@@ -14,4 +14,4 @@ COPY --from=builder /home/build/ui/index.js ui/index.js
 COPY --from=builder /home/build/ui/index.css ui/index.css
 COPY --from=builder /home/build/ui/index.html ui/index.html
 COPY --from=builder /home/build/stream-bot stream-bot
-ENTRYPOINT stream-bot
+ENTRYPOINT ["stream-bot"]
