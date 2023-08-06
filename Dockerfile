@@ -1,7 +1,8 @@
 FROM bitnami/golang:1.20 as builder
 WORKDIR /home/build
 COPY . .
-RUN go get . \
+RUN curl -fsSL https://esbuild.github.io/dl/latest | sh \ 
+    && go get . \
     && GOOS=linux GOARCH=amd64 go build -o stream-bot . \
     && chmod +x stream-bot \
     && esbuild --bundle --outfile=ui/index.js ui/src/index.ts
