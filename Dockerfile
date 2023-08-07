@@ -11,7 +11,7 @@ RUN curl -fsSL https://esbuild.github.io/dl/latest | sh \
 
 # FROM scratch as release
 FROM bitnami/minideb as release
-RUN apt-get install -y ca-certificates
+RUN apt install -y ca-certificates
 WORKDIR /home/bot
 COPY --from=builder /home/build/ui/index.js ui/index.js
 COPY --from=builder /home/build/ui/index.css ui/index.css
