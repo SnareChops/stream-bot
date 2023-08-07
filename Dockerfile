@@ -13,6 +13,8 @@ RUN curl -fsSL https://esbuild.github.io/dl/latest | sh \
 FROM bitnami/minideb as release
 RUN apt update -y && apt install -y ca-certificates
 WORKDIR /home/bot
+COPY /etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-bundle.crt
+COPY /etc/ssl/certs/ca-bundle.trust.crt /etc/ssl/certs/ca-bundle.trust.crt
 COPY --from=builder /home/build/ui/index.js ui/index.js
 COPY --from=builder /home/build/ui/index.css ui/index.css
 COPY --from=builder /home/build/ui/index.html ui/index.html
