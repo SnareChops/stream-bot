@@ -43,10 +43,12 @@ type ResubSignal struct {
 
 func NewResubEventSub(userId string) *EventSub {
 	return &EventSub{
-		Type:      "channel.subscription.message",
-		Version:   "1",
-		Condition: map[string]interface{}{},
-		Handler:   handleResub,
+		Type:    "channel.subscription.message",
+		Version: "1",
+		Condition: map[string]interface{}{
+			"broadcaster_user_id": userId,
+		},
+		Handler: handleResub,
 	}
 }
 

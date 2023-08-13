@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/SnareChops/twitchbot/events"
+	"github.com/SnareChops/twitchbot/signals"
 	"nhooyr.io/websocket"
 )
 
@@ -17,7 +18,7 @@ type EventPayload struct {
 	Event map[string]interface{} `json:"event"`
 }
 
-func listen(ws *websocket.Conn, send chan []byte, reconnect chan string, close chan bool, subscriptions []*events.EventSub) {
+func listen(ws *websocket.Conn, reconnect chan string, close chan bool, subscriptions []*events.EventSub) {
 	println("Starting WebSocket listener...")
 	for {
 		// Check if the connection has been closed, if so stop listening
@@ -60,7 +61,7 @@ func listen(ws *websocket.Conn, send chan []byte, reconnect chan string, close c
 						fmt.Printf("Failed to decode message payload for event type %s: %s\n", subscription.Type, err)
 					}
 					select {
-					case send <- subscription.Handler(payload.Event):
+					case signals.SendToUI <- subscription.Handler(payload.Event):
 					default:
 					}
 					break

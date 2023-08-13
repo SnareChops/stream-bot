@@ -12,7 +12,9 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/SnareChops/twitchbot/db"
 	"github.com/SnareChops/twitchbot/events"
+	"github.com/SnareChops/twitchbot/irc"
 	"github.com/SnareChops/twitchbot/ui"
 	"github.com/SnareChops/twitchbot/ws"
 )
@@ -27,6 +29,10 @@ var TwitchScopes []string = []string{
 }
 
 func main() {
+	channelName := os.Getenv("TWITCH_CHANNEL_NAME")
+	if channelName == "" {
+		panic("TIWTCH_CHANNEL_NAME missing")
+	}
 	// channel := "snarechops"
 	clientId := os.Getenv("TWITCH_CLIENT_ID")
 	if clientId == "" {
@@ -42,38 +48,46 @@ func main() {
 	}
 	userId := os.Getenv("TWITCH_USER_ID")
 	if userId == "" {
-		panic("TWITCH_USER_ID")
+		panic("TWITCH_USER_ID missing")
 	}
 	wsUrl := os.Getenv("TWITCH_WS_URL")
 	if wsUrl == "" {
-		panic("TWITCH_WS_URL")
+		panic("TWITCH_WS_URL missing")
 	}
 	apiUrl := os.Getenv("TWITCH_API_URL")
 	if apiUrl == "" {
-		panic("TWITCH_API_URL")
+		panic("TWITCH_API_URL missing")
+	}
+	connString := os.Getenv("MONGO_CONN_STRING")
+	if connString == "" {
+		panic("MONGO_CONN_STRING missing")
+	}
+	dbName := os.Getenv("MONGO_DB_NAME")
+	if dbName == "" {
+		panic("MONGO_DB_NAME")
 	}
 
-	send := make(chan []byte, 20)
-	close := make(chan bool)
+	// Start the database connection to mongo
+	disconnect := db.Start(connString, dbName)
+	defer disconnect()
 
-	// TODO: Send close signal when application is killed
-	go ws.Start(send, clientId, userId, token, wsUrl, apiUrl, []*events.EventSub{
+	// Start the EventSub WS connection to twitch
+	go ws.Start(clientId, userId, token, wsUrl, apiUrl, []*events.EventSub{
 		events.NewCheerEventSub(userId),
 		events.NewFollowEventSub(userId),
 		events.NewGiftEventSub(userId),
 		events.NewResubEventSub(userId),
 		events.NewSubEventSub(userId),
+		events.NewRedeemEventSub(userId),
 	})
 
-	// TODO: Send close signal when application is killed
-	// go irc(channel, token)
+	// Start the IRC connection
+	go irc.Start(channelName, token)
 
-	go ui.Start(send, close)
+	// Start the alert UI connection
+	go ui.Start()
 
-	// for {
-	// 	time.Sleep(time.Second * 5)
-	// 	send <- []byte("{\"kind\": \"twitch.follow\", \"username\": \"test\"}")
-	// }
+	// TODO: Start the admin interface connection
 
 	println("Bot started...")
 	c := make(chan os.Signal, 1)

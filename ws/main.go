@@ -8,7 +8,7 @@ import (
 	"nhooyr.io/websocket"
 )
 
-func Start(send chan []byte, clientId, userId, token, wsUrl, subscribeUrl string, subscriptions []*events.EventSub) error {
+func Start(clientId, userId, token, wsUrl, subscribeUrl string, subscriptions []*events.EventSub) error {
 	// Connect to ws server and get back session id
 	var ws *websocket.Conn
 	var sessionId string
@@ -24,10 +24,10 @@ func Start(send chan []byte, clientId, userId, token, wsUrl, subscribeUrl string
 	}
 	// Create subscriptions with session id
 	// retry subscription creations that failed
-	failed := subscriptions
-	for len(failed) > 0 {
-		failed = createSubscriptions(clientId, sessionId, userId, token, subscribeUrl, subscriptions)
-		if len(failed) > 0 {
+	retry := subscriptions
+	for len(retry) > 0 {
+		retry = createSubscriptions(clientId, sessionId, userId, token, subscribeUrl, retry)
+		if len(retry) > 0 {
 			time.Sleep(5 * time.Second)
 		}
 	}
@@ -35,7 +35,7 @@ func Start(send chan []byte, clientId, userId, token, wsUrl, subscribeUrl string
 	// Listen for messages
 	reconnect := make(chan string)
 	close := make(chan bool)
-	go listen(ws, send, reconnect, close, subscriptions)
+	go listen(ws, reconnect, close, subscriptions)
 	for {
 		wsUrl = <-reconnect
 		// Make ws connection
@@ -48,7 +48,7 @@ func Start(send chan []byte, clientId, userId, token, wsUrl, subscribeUrl string
 		prevClose := close
 		close = make(chan bool)
 		// Start new listener
-		go listen(ws, send, reconnect, close, subscriptions)
+		go listen(ws, reconnect, close, subscriptions)
 		// Send close signal to previous listener
 		prevClose <- true
 		prev.Close(websocket.StatusGoingAway, "goodbye")
@@ -69,10 +69,11 @@ func createSubscriptions(clientId, sessionId, userId, token, subscribeUrl string
 		}
 		_, err := subscribe(clientId, token, subscribeUrl, body)
 		if err != nil {
-			fmt.Printf("Failed to create subscription: %s\n", err)
+			fmt.Printf("Failed to create subscription for %s: %s\n", sub.Type, err)
 			failed = append(failed, sub)
+		} else {
+			fmt.Printf("Subscribed to %s\n", sub.Type)
 		}
-		fmt.Printf("Subscribed to %s\n", sub.Type)
 	}
 	return failed
 }
