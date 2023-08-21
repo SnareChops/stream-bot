@@ -34,6 +34,8 @@ func ProcessRedeem(signal RedeemSignal) []byte {
 		return Hi(signal)
 	case "hooray":
 		return Hooray(signal)
+	case "bass solo":
+		return BassSolo(signal)
 	default:
 		return nil
 	}

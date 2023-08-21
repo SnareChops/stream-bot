@@ -5,7 +5,8 @@ import { CheerElement } from './cheer';
 import { SubElement } from './sub';
 import { ResubElement } from './resub';
 import { GiftElement } from './gift';
-import { AudioSignal, AudioPlayer } from './components/audio-player'
+import { AudioSignal, AudioPlayer } from './components/audio-player';
+import { VideoSignal, VideoPlayer } from './components/video-player';
 
 const socketUrl = `ws://${location.host}/ws`;
 
@@ -37,12 +38,10 @@ export class Alerts extends HTMLElement {
             case "twitch.gift":
                 return this.#enqueue(GiftElement.create(signal));
             case "audio":
-                return this.#playAudio(signal as unknown as AudioSignal)
+                return this.append(AudioPlayer.create((signal as unknown as AudioSignal).url));
+            case "video.small":
+                return this.#enqueue(VideoPlayer.create(signal as unknown as VideoSignal));
         }
-    }
-
-    #playAudio(signal: AudioSignal) {
-        this.appendChild(AudioPlayer.create(signal.url));
     }
 
     #enqueue(component: AlertElement) {
