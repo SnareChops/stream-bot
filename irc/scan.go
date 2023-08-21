@@ -17,6 +17,23 @@ type AudioSignal struct {
 func scan(content []string) {
 	if slices.Contains(content, "GOODONE") {
 		audio("audio-emotes/GOODONE.mp3")
+		return
+	}
+	if slices.Contains(content, "CLUELESS") {
+		audio("audio-emotes/CLUELESS.mp3")
+		return
+	}
+	if slices.Contains(content, "PEEK") {
+		audio("audio-emotes/PEEK.mp3")
+		return
+	}
+	if slices.Contains(content, "SEX") {
+		audio("audio-emotes/SEX.mp3")
+		return
+	}
+	if slices.Contains(content, "WOW") {
+		audio("audio-emotes/WOW.mp3")
+		return
 	}
 }
 

@@ -36,6 +36,8 @@ func ProcessRedeem(signal RedeemSignal) []byte {
 		return Hooray(signal)
 	case "bass solo":
 		return BassSolo(signal)
+	case "six hours later":
+		return SixHoursLater(signal)
 	default:
 		return nil
 	}
