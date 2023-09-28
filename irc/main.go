@@ -30,7 +30,6 @@ func Start(channel, token string) error {
 		handle(message)
 	})
 	go speaker(channel, client)
-	client.Say(channel, "HEY bot connected")
 	return client.Connect()
 }
 

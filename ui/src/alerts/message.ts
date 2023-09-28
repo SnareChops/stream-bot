@@ -1,4 +1,4 @@
-import { createElement } from '.';
+import { createElement } from '../lib';
 export interface Message {
     text: string;
     emotes: {

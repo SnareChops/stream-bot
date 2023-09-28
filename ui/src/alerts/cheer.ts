@@ -1,5 +1,5 @@
-import { Component, createComponent, createElement } from '.';
-import { Signal } from './socket';
+import { Component, createComponent } from '../lib';
+import { Signal } from '../lib/socket';
 
 interface CheerSignal extends Signal {
     username: string;

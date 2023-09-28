@@ -1,5 +1,3 @@
-import { Alerts } from './alerts';
-
 export type FlatObject = { [key: string]: string | number | boolean };
 
 export function createElement<T extends HTMLElement>(tag: string, attrs: FlatObject = {}): T {
@@ -14,8 +12,6 @@ export function createComponent<T extends HTMLElement>(component: { new(): T, ge
     return createElement(component.tag, attrs)
 }
 
-export function Component(ctr: Function & { get tag(): string }) {
+export function Component(ctr: Function & { get tag(): string }, _: ClassDecoratorContext) {
     window.customElements.define(ctr.tag, ctr as unknown as typeof HTMLElement);
 }
-
-document.querySelector('body')?.appendChild(createComponent(Alerts));

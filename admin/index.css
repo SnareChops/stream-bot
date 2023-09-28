@@ -1,0 +1,43 @@
+body {
+    background: #202124;
+}
+
+admin-panel {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+chatters-panel {
+    display: block;
+    border: 2px solid red;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    width: 30%;
+    height: 500px;
+}
+
+mystery-panel {
+    display: block;
+    height: 500px;
+    width: 30%;
+    border: 2px solid red;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+quick-panel {
+    display: flex;
+    width: 30%;
+    height: 500px;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+}

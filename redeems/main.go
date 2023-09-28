@@ -56,6 +56,10 @@ func ProcessRedeem(signal RedeemSignal) []byte {
 		return Audio("audio/very-impressive-indeed.mp3")
 	case "dummy":
 		return Audio("audio/what-a-complete-moron.mp3")
+	case "for those feet people":
+		return Audio("audio/for-those-people-that-like-feet.mp3")
+	case "daily mystery":
+		return Mystery(signal)
 	default:
 		return nil
 	}

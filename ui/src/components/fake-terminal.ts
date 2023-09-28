@@ -1,5 +1,5 @@
-import { Component, createComponent, createElement } from '..';
-import { Message, formatMessage } from '../message';
+import { Component, createComponent, createElement } from '../lib';
+import { Message, formatMessage } from '../alerts/message';
 
 @Component
 export class FakeTerminal extends HTMLElement {

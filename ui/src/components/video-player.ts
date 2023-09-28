@@ -1,4 +1,4 @@
-import { Component, createComponent, createElement } from '..';
+import { Component, createComponent, createElement } from '../lib';
 
 export interface VideoSignal {
     url: string;

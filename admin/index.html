@@ -1,0 +1,35 @@
+{{ define "index" }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Bot Admin Console</title>
+    <link rel="stylesheet" href="admin/index.css">
+    <script src="https://unpkg.com/htmx.org@1.9.5"
+        integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <admin-panel>
+        <chatters-panel>
+            <li>snarechops</li>
+            <li>snarechops</li>
+            <li>snarechops</li>
+            <li>snarechops</li>
+            <li>snarechops</li>
+        </chatters-panel>
+        <mystery-panel hx-get="/admin/mysteries" hx-trigger="load">
+        </mystery-panel>
+        <quick-panel hx-get="/admin/quick" hx-trigger="load"></quick-panel>
+    </admin-panel>
+    <!-- <script src="admin/index.js"></script> -->
+</body>
+
+</html>
+{{ end }}
+{{ define "mystery-item" }}
+<li {{if .Selected}} class="selected" {{end}}>{{.Name}}</li>
+{{ end }}

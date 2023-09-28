@@ -15,7 +15,9 @@ func init() {
 		panic(err)
 	}
 	for _, file := range files {
-		HiFiles = append(HiFiles, file.Name())
+		if !file.IsDir() {
+			HiFiles = append(HiFiles, file.Name())
+		}
 	}
 }
 

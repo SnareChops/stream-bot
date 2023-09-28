@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/SnareChops/twitchbot/admin"
 	"github.com/SnareChops/twitchbot/signals"
 	"github.com/go-chi/chi/v5"
 	"golang.org/x/exp/slices"
@@ -17,11 +18,12 @@ import (
 
 func Start() {
 	addui := make(chan *websocket.Conn)
-	addadmin := make(chan *websocket.Conn)
+
 	go uiemitter(addui)
-	go adminemitter(addadmin)
 
 	router := chi.NewRouter()
+
+	router.Mount("/admin", admin.NewRouter())
 
 	router.Get("/", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		http.ServeFile(w, req, "ui/index.html")
@@ -36,23 +38,14 @@ func Start() {
 	}))
 
 	router.Get("/ws", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		ws, err := websocket.Accept(w, req, nil)
+		ws, err := websocket.Accept(w, req, &websocket.AcceptOptions{InsecureSkipVerify: true})
 		if err != nil {
+			println(err.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(fmt.Sprint(err)))
 			return
 		}
 		addui <- ws
-	}))
-
-	router.Get("/adminws", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		ws, err := websocket.Accept(w, req, nil)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprint(err)))
-			return
-		}
-		addadmin <- ws
 	}))
 
 	router.Get("/files/{name}", func(w http.ResponseWriter, req *http.Request) {
@@ -93,7 +86,7 @@ func uiemitter(add chan *websocket.Conn) {
 	for {
 		select {
 		case message := <-signals.SendToUI:
-			fmt.Printf("Sending to UI: %s\n", string(message))
+			// fmt.Printf("Sending to UI: %s\n", string(message))
 			for i, conn := range connections {
 				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 				err := conn.Write(ctx, websocket.MessageText, message)
@@ -110,31 +103,6 @@ func uiemitter(add chan *websocket.Conn) {
 			return
 		case connection := <-add:
 			println("UI Client connected!")
-			connections = append(connections, connection)
-		}
-	}
-}
-
-func adminemitter(add chan *websocket.Conn) {
-	connections := []*websocket.Conn{}
-	for {
-		select {
-		case message := <-signals.SendToAdmin:
-			fmt.Printf("Sending to Admin: %s\n", string(message))
-			for _, conn := range connections {
-				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-				err := conn.Write(ctx, websocket.MessageText, message)
-				cancel()
-				if err != nil {
-					fmt.Printf("Failed to send message to admin: %s\n", err)
-				}
-			}
-		case <-signals.Shutdown:
-			for _, conn := range connections {
-				conn.Close(websocket.StatusNormalClosure, "goodbye")
-			}
-			return
-		case connection := <-add:
 			connections = append(connections, connection)
 		}
 	}

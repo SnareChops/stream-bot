@@ -1,10 +1,10 @@
-import { Component } from '.';
-import { Socket, Signal } from './socket';
-import { FollowElement } from './follow';
-import { CheerElement } from './cheer';
-import { SubElement } from './sub';
-import { ResubElement } from './resub';
-import { GiftElement } from './gift';
+import { createComponent, Component } from './lib';
+import { Socket, Signal } from './lib/socket';
+import { FollowElement } from './alerts/follow';
+import { CheerElement } from './alerts/cheer';
+import { SubElement } from './alerts/sub';
+import { ResubElement } from './alerts/resub';
+import { GiftElement } from './alerts/gift';
 import { AudioSignal, AudioPlayer } from './components/audio-player';
 import { VideoSignal, VideoPlayer } from './components/video-player';
 
@@ -20,8 +20,10 @@ export class Alerts extends HTMLElement {
     #socket: Socket | undefined;
     #queue: AlertElement[] = [];
     #active: AlertElement[] = [];
+
     connectedCallback() {
-        this.#socket = new Socket(socketUrl, this.#onSignal.bind(this));
+        this.#socket = new Socket(socketUrl);
+        this.#socket.addHandler(this.#onSignal.bind(this));
     }
 
     #onSignal(signal: Signal) {
@@ -73,3 +75,5 @@ export class Alerts extends HTMLElement {
         }
     }
 }
+
+document.querySelector('body')?.appendChild(createComponent(Alerts));

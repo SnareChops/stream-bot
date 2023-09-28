@@ -1,6 +1,6 @@
-import { Component, createComponent, createElement } from '.';
-import { Signal } from './socket';
-import { FakeTerminal } from './components/fake-terminal';
+import { Component, createComponent } from '../lib';
+import { Signal } from '../lib/socket';
+import { FakeTerminal } from '../components/fake-terminal';
 
 interface SubSignal extends Signal {
     username: string;

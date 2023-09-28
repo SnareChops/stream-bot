@@ -1,6 +1,6 @@
 {
   "files": [
-    "src/index.ts"
+    "src/lib/index.ts"
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */

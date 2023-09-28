@@ -1,6 +1,6 @@
-
 export interface Signal {
     kind: string;
+    args?: string[];
 }
 
 export type SignalHandler = (message: Signal) => any;
@@ -8,15 +8,22 @@ export type SignalHandler = (message: Signal) => any;
 export class Socket {
     #url: string;
     #socket: WebSocket | undefined;
-    #onSignal: SignalHandler;
+    #handlers: SignalHandler[] = [];
     #interval: number = 1000;
     #maxInterval: number = 30000;
     #decay: number = 2;
 
-    constructor(url: string, onSignal: SignalHandler) {
+    constructor(url: string) {
         this.#url = url;
-        this.#onSignal = onSignal;
         this.#connect();
+    }
+
+    addHandler(handler: SignalHandler) {
+        this.#handlers.push(handler);
+    }
+
+    send(signal: Signal) {
+        this.#socket?.send(JSON.stringify(signal));
     }
 
     #connect() {
@@ -31,10 +38,11 @@ export class Socket {
         }
         this.#socket.onerror = err => console.error('Socket connection error', err);
         this.#socket.onmessage = event => {
-            console.log('Socket message received', event);
             try {
                 const message = JSON.parse(event.data) as Signal;
-                this.#onSignal(message);
+                for (const handler of this.#handlers) {
+                    handler(message);
+                }
             } catch (err) {
                 console.log('Failed to parse message data', err);
             }
