@@ -13,13 +13,11 @@ func Start(clientId, userId, token, wsUrl, subscribeUrl string, subscriptions []
 	var ws *websocket.Conn
 	var sessionId string
 	var err error
-	for {
+	for sessionId == "" {
 		ws, sessionId, err = connect(wsUrl)
 		if err != nil {
 			fmt.Printf("Failed to connect to twitch websocket: %s\n", err)
 			time.Sleep(5 * time.Second)
-		} else {
-			break
 		}
 	}
 	// Create subscriptions with session id

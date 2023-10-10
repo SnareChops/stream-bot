@@ -24,7 +24,7 @@ func listen(ws *websocket.Conn, reconnect chan string, close chan bool, subscrip
 		// Check if the connection has been closed, if so stop listening
 		select {
 		case <-close:
-			println("Lister closed")
+			println("Listener closed")
 			return
 		default:
 		}
@@ -60,10 +60,9 @@ func listen(ws *websocket.Conn, reconnect chan string, close chan bool, subscrip
 					if err != nil {
 						fmt.Printf("Failed to decode message payload for event type %s: %s\n", subscription.Type, err)
 					}
-					select {
-					case signals.SendToUI <- subscription.Handler(payload.Event):
-					default:
-					}
+					signal := subscription.Handler(payload.Event)
+					println("Sending redeem signal to ui")
+					signals.SendToUI <- signal
 					break
 				}
 			}

@@ -1,10 +1,6 @@
 package irc
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/SnareChops/twitchbot/signals"
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
@@ -20,38 +16,14 @@ func Start(channel, token string) error {
 
 	client.Capabilities = []string{twitch.TagsCapability, twitch.CommandsCapability}
 	client.Join(channel)
-	client.OnConnect(func() {
-		println("Connected to IRC")
-	})
-	client.OnReconnectMessage(func(message twitch.ReconnectMessage) {
-		println("Reconnected to IRC")
-	})
-	client.OnPrivateMessage(func(message twitch.PrivateMessage) {
-		handle(message)
-	})
+	client.OnConnect(connect)
+	client.OnReconnectMessage(reconnect)
+	client.OnPrivateMessage(private)
+	client.OnUserJoinMessage(join)
+	client.OnUserPartMessage(leave)
+	// client.OnUserNoticeMessage(notice)
 	go speaker(channel, client)
 	return client.Connect()
-}
-
-func handle(message twitch.PrivateMessage) {
-	content := strings.Split(strings.TrimSpace(message.Message), " ")
-	if len(content) == 0 {
-		return
-	}
-	if content[0][0] != '!' {
-		scan(content)
-		return
-	}
-	switch name := strings.ToLower(content[0]); name {
-	default:
-		command, err := FindCommand(name)
-		if err != nil {
-			fmt.Printf("Failed to find command: %s, %s", content[0], err)
-		}
-		if canRun(command.Permission, message) {
-			signals.SendToIRC <- command.Response
-		}
-	}
 }
 
 func canRun(perm int, message twitch.PrivateMessage) bool {

@@ -17,11 +17,12 @@ type AdminSignal struct {
 	Args []string `json:"args"`
 }
 
-func Listen(connection *websocket.Conn) {
+func listen(connection *websocket.Conn) {
 	for {
 		_, message, err := connection.Read(context.Background())
 		if err != nil {
 			fmt.Printf("Failed to read message from admin websocket: %s\n", err)
+			return // Stop reading from the socket, let the connection die and reconnect
 		}
 		signal := new(AdminSignal)
 		err = json.Unmarshal(message, signal)

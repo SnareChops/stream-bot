@@ -3,7 +3,7 @@ package events
 import (
 	"fmt"
 
-	"github.com/SnareChops/twitchbot/redeems"
+	"github.com/SnareChops/twitchbot/events/redeems"
 )
 
 const RedeemAuthScope = "channel:read:redemptions"

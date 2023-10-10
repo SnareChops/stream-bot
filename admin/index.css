@@ -1,5 +1,11 @@
+:root {
+    --body-bg-color: #202124;
+    --menu-bg-color: #010010;
+    --menu-accent-color: #01f9ff;
+}
+
 body {
-    background: #202124;
+    background: var(--body-bg-color);
 }
 
 admin-panel {
@@ -13,12 +19,28 @@ admin-panel {
 
 chatters-panel {
     display: block;
-    border: 2px solid red;
+    border: 2px solid var(--menu-accent-color);
+    background-color: var(--menu-bg-color);
     padding: 10px;
     box-sizing: border-box;
     border-radius: 10px;
     width: 30%;
     height: 500px;
+}
+
+chatters-panel ul {
+    padding: 0;
+}
+
+chatters-panel li {
+    list-style: none;
+    color: var(--menu-accent-color);
+}
+
+chatters-panel li span {
+    padding-left: 5px;
+    font-size: small;
+    color: lightgray;
 }
 
 mystery-panel {

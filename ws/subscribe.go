@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 )
 
@@ -67,13 +66,8 @@ func subscribe(clientId, token, subscribeUrl string, body SubscribeBody) (*Subsc
 		return nil, fmt.Errorf("%s: %v", res.Status, res.Body)
 	}
 
-	jsonBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	resBody := SubscribeResponse{}
-	err = json.Unmarshal(jsonBody, &res)
+	err = json.NewDecoder(res.Body).Decode(&res)
 	if err != nil {
 		return nil, err
 	}

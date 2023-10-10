@@ -17,7 +17,6 @@ type GiftEvent struct {
 	Tier                 string `json:"tier"`                   // The tier of subscriptions in the subscription gift
 	CumulativeTotal      int    `json:"cumulative_total"`       // The number of subscriptions gifted by this user in the channel. This value is null for anonymous gifts or if the gifter has opted out of sharing this information
 	IsAnon               bool   `json:"is_anonymous"`           // Whether the subscription gift was anonymous
-
 }
 
 // done

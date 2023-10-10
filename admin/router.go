@@ -1,11 +1,9 @@
 package admin
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"text/template"
-	"time"
 
 	"github.com/SnareChops/twitchbot/signals"
 	"github.com/go-chi/chi/v5"
@@ -23,8 +21,8 @@ func init() {
 }
 
 func NewRouter() chi.Router {
-	addadmin := make(chan *websocket.Conn)
-	go adminemitter(addadmin)
+	emitter := signals.NewSignalEmitter("Admin", signals.SendToAdmin)
+	go emitter.Start()
 
 	router := chi.NewRouter()
 
@@ -45,7 +43,7 @@ func NewRouter() chi.Router {
 			w.Write([]byte(fmt.Sprint(err)))
 			return
 		}
-		addadmin <- ws
+		emitter.Add(ws)
 	}))
 	return router
 }
@@ -54,30 +52,4 @@ func file(path string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		http.ServeFile(w, req, path)
 	})
-}
-
-func adminemitter(add chan *websocket.Conn) {
-	connections := []*websocket.Conn{}
-	for {
-		select {
-		case message := <-signals.SendToAdmin:
-			fmt.Printf("Sending to Admin: %s\n", string(message))
-			for _, conn := range connections {
-				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-				err := conn.Write(ctx, websocket.MessageText, message)
-				cancel()
-				if err != nil {
-					fmt.Printf("Failed to send message to admin: %s\n", err)
-				}
-			}
-		case <-signals.Shutdown:
-			for _, conn := range connections {
-				conn.Close(websocket.StatusNormalClosure, "goodbye")
-			}
-			return
-		case connection := <-add:
-			connections = append(connections, connection)
-			go Listen(connection)
-		}
-	}
 }

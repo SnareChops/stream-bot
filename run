@@ -1,4 +1,6 @@
 #!/bin/bash
+esbuild --bundle --outfile=admin/index.js admin/src/index.ts
 esbuild --bundle --outfile=ui/index.js ui/src/alerts.ts
-esbuild --bundle --outfile=ui/admin.js ui/src/admin.ts
+esbuild --bundle --outfile=alerts/index.js alerts/src/index.ts
+esbuild --bundle --outfile=avatar/index.js avatar/src/index.ts
 env $(cat .env | grep -v '^#' | xargs) go run .

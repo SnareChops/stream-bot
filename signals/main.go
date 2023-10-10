@@ -15,14 +15,16 @@ var (
 	SendToAdmin      chan []byte
 	SendToIRC        chan string
 	SendToOBS        chan OBSRequest
+	SendToAvatar     chan []byte
 	ReceiveFromAdmin chan []byte
 )
 
 func init() {
 	Shutdown = make(chan bool)
-	SendToUI = make(chan []byte, 20)
+	SendToUI = make(chan []byte)
 	SendToAdmin = make(chan []byte, 20)
 	SendToIRC = make(chan string)
 	SendToOBS = make(chan OBSRequest)
+	SendToAvatar = make(chan []byte)
 	ReceiveFromAdmin = make(chan []byte, 20)
 }

@@ -52,7 +52,7 @@ func InputVolumeMetersHandler(message []byte) {
 			if err != nil {
 				fmt.Printf("Failed to encode AvatarSignal: %s\n", err.Error())
 			}
-			signals.SendToUI <- data
+			signals.SendToAvatar <- data
 			break
 		}
 	}

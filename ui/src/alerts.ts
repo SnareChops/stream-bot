@@ -8,7 +8,7 @@ import { GiftElement } from './alerts/gift';
 import { AudioSignal, AudioPlayer } from './components/audio-player';
 import { VideoSignal, VideoPlayer } from './components/video-player';
 
-const socketUrl = `ws://${location.host}/ws`;
+const socketUrl = `ws://${location.host}/ui/ws`;
 
 interface AlertElement extends HTMLElement {
     complete: () => void;

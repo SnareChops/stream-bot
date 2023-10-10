@@ -14,7 +14,7 @@ import (
 	"github.com/SnareChops/twitchbot/events"
 	"github.com/SnareChops/twitchbot/irc"
 	"github.com/SnareChops/twitchbot/obs"
-	"github.com/SnareChops/twitchbot/ui"
+	"github.com/SnareChops/twitchbot/router"
 	"github.com/SnareChops/twitchbot/ws"
 	"golang.org/x/exp/slices"
 )
@@ -74,8 +74,8 @@ func main() {
 		go irc.Start(channelName, token)
 	}
 
-	// Start the alert UI connection
-	go ui.Start()
+	// Start the http and websocket handlers
+	go router.Start()
 
 	// TODO: Start the admin interface connection
 	go admin.Start()

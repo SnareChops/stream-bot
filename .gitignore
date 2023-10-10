@@ -1,3 +1,6 @@
 files/
+admin/index.js
+alerts/index.js
+avatar/index.js
 ui/index.js
 .env
